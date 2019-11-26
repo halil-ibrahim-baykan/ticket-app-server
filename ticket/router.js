@@ -44,7 +44,7 @@ router.get("/ticket/:id", async (req, res, next) => {
       price,
       createdAt
     });
-    console.log(risk);
+    console.log(ticket, "fsdfsdfsdfsdf");
 
     ticketsToSend.push({
       user,
@@ -52,7 +52,8 @@ router.get("/ticket/:id", async (req, res, next) => {
       risk,
       data,
       createdAt,
-      comments: ticket.comments
+      comments: ticket.comments,
+      name: ticket.name
     });
   }
   res.send(ticketsToSend);
@@ -67,13 +68,13 @@ router.post("/ticket", auth, (req, res, next) => {
 
 module.exports = router;
 
-const calculateRisk = ({
+module.exports.calculateRisk = function calculateRisk({
   totalTicketsOfUser,
   averagePrice,
   price,
   createdAt,
   totalCommentsOfTicket
-}) => {
+}) {
   console.log("totalTicketsOfUser", totalTicketsOfUser);
   console.log("averagePrice", averagePrice);
   console.log("price", price);
