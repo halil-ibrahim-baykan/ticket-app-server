@@ -14,7 +14,3 @@ Ticket.belongsTo(Event);
 Event.hasMany(Ticket);
 
 module.exports = Event;
-
-
-
-

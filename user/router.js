@@ -11,6 +11,7 @@ router.get("/user", (req, res, next) => {
 });
 
 router.post("/user", (req, res, next) => {
+  console.log(req.body);
   const { name, password } = req.body;
   if (name === "" || password === "") {
     return res.status(400).send("Entry all inputs");
