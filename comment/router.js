@@ -16,4 +16,24 @@ router.post("/comment", auth, (req, res, next) => {
     .catch(err => next(err));
 });
 
+router.get("/comment/:commentId", (req, res, next) => {
+  Comment.findByPk(req.params.commentId)
+    .then(selectedComment => res.send(selectedComment))
+    .catch(next);
+});
+
+router.put("/comment/:commentId", auth, (req, res, next) => {
+  Comment.findByPk(req.params.commentId)
+    .then(comment => {
+      comment.update(req.body).then(updatedComment => res.send(updatedComment));
+    })
+    .catch(next);
+});
+
+router.delete("/comment/:commentId", auth, (req, res, next) => {
+  Comment.destroy({ where: { id: req.params.commentId } })
+    .then(deletedComment => res.send({ deletedComment }))
+    .catch(next);
+});
+
 module.exports = router;

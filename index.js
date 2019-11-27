@@ -1,8 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-
-// const imageRouter = require("./image/router");
 const jwtRouter = require("./auth/router");
 const userRouter = require("./user/router");
 const eventRouter = require("./event/router");

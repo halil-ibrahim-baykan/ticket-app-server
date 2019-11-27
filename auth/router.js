@@ -5,12 +5,9 @@ const bcrypt = require("bcrypt");
 const auth = require("./middleware");
 
 const router = new Router();
-// checking a user account
+// for signup => I'm using inside the user router '/user' path
 router.post("/login", (req, res) => {
   const { name, password } = req.body;
-  // const userName = req.body.userName;
-  // const password = req.body.password;
-
   if (!name || !password) {
     res.status(400).send({
       message: "Please supply a valid Name and password"
@@ -27,8 +24,6 @@ router.post("/login", (req, res) => {
             message: "User with that name does not exist"
           });
         } else if (bcrypt.compareSync(req.body.password, entity.password)) {
-          //our solution is here
-          // 3. if the password is correct, return a JWT with the userId of the user (user.id)
           res.send({
             jwt: toJWT({ userId: entity.id, userName: entity.name })
           });
