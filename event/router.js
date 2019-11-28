@@ -12,14 +12,24 @@ const moment = require("moment");
 const router = new Router();
 
 router.get("/event", (req, res, next) => {
-  Event.findAll()
+  const limit = req.query.limit || 10;
+  const offset = req.query.offset || 0;
+  //   Event.findAndCountAll({ limit, offset })
+  //     .then(result => res.send({ events: result.rows, total: result.count }))
+  //     .catch(error => next(error))
+  // })
+
+  Event.findAndCountAll({ limit, offset })
     .then(events => {
-      events = events.filter(event => {
+      const filteredEvents = events.rows.filter(event => {
         // console.log("MOMENTTTTT", moment());   // moment() means now
         // console.log("MOMENTTTTT22222222", moment(new Date(event.endDate))); // =>this one is this date of the events end.s
         return moment(new Date(event.endDate)).isAfter(moment()); // if endDate of the event is not after now it's gonna be false.
       });
-      res.send(events);
+
+      // console.log(filteredEvents, events.count);
+
+      res.send(filteredEvents);
     })
     .catch(next);
 });
