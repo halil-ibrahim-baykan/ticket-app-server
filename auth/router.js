@@ -24,8 +24,10 @@ router.post("/login", (req, res) => {
             message: "User with that name does not exist"
           });
         } else if (bcrypt.compareSync(req.body.password, entity.password)) {
+          //magicc
+          //compare sent password to entity which is in the table password..
           res.send({
-            jwt: toJWT({ userId: entity.id, userName: entity.name })
+            jwt: toJWT({ userId: entity.id, userName: entity.name }) //if it's ok send it in the jwt code userId=entity.id userName=entity.name
           });
         } else {
           res.status(400).send({

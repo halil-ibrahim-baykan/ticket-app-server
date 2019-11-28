@@ -1,26 +1,39 @@
 const { Router } = require("express");
 const Comment = require("./model");
+const User = require("../user/model");
 const auth = require("../auth/middleware");
+const jwt = require("jsonwebtoken");
 
 const router = new Router();
 
-router.get("/comment", (req, res, next) => {
-  Comment.findAll()
-    .then(comments => res.send(comments))
+router.get("/comment/:ticketId", (req, res, next) => {
+  Comment.findAll({ where: { ticketId: req.params.ticketId }, include: [User] })
+    .then(comments => {
+      return res.send(comments);
+    })
     .catch(err => next(err));
 });
 
 router.post("/comment", auth, (req, res, next) => {
-  Comment.create(req.body)
-    .then(newComment => res.json(newComment))
+  let eventData = req.body;
+  let token = req.headers.authorization.split(" ")[1];
+
+  eventData.userId = jwt.decode(token).userId;
+
+  Comment.create(eventData)
+    .then(newComment => {
+      Comment.findByPk(newComment.id, { include: [User] }).then(comment => {
+        res.json(comment);
+      });
+    })
     .catch(err => next(err));
 });
 
-router.get("/comment/:commentId", (req, res, next) => {
-  Comment.findByPk(req.params.commentId)
-    .then(selectedComment => res.send(selectedComment))
-    .catch(next);
-});
+// router.get("/comment/:commentId", (req, res, next) => {
+//   Comment.findByPk(req.params.commentId)
+//     .then(selectedComment => res.send(selectedComment))
+//     .catch(next);
+// });
 
 router.put("/comment/:commentId", auth, (req, res, next) => {
   Comment.findByPk(req.params.commentId)

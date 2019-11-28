@@ -21,7 +21,10 @@ router.post("/user", (req, res, next) => {
     name,
     password: bcrypt.hashSync(password, 10)
   })
-    .then(newUser => res.json(newUser))
+    .then(newUser => {
+      console.log("NEW_USERRR", newUser);
+      res.json(newUser);
+    })
     .catch(next);
 });
 
