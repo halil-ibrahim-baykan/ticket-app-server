@@ -11,9 +11,9 @@ const moment = require("moment");
 
 const router = new Router();
 
-router.get("/event", (req, res, next) => {
-  const limit = req.query.limit || 10;
-  const offset = req.query.offset || 0;
+router.get("/event/", (req, res, next) => {
+  const limit = req.query.pageLimit;
+  const offset = req.query.pageOfset;
   //   Event.findAndCountAll({ limit, offset })
   //     .then(result => res.send({ events: result.rows, total: result.count }))
   //     .catch(error => next(error))
@@ -26,6 +26,8 @@ router.get("/event", (req, res, next) => {
         // console.log("MOMENTTTTT22222222", moment(new Date(event.endDate))); // =>this one is this date of the events end.s
         return moment(new Date(event.endDate)).isAfter(moment()); // if endDate of the event is not after now it's gonna be false.
       });
+      console.log(new Date());
+      console.log("limit", limit);
 
       // console.log(filteredEvents, events.count);
 
@@ -63,7 +65,7 @@ router.put("/event/:eventId", (req, res, next) => {
   });
 });
 
-router.delete("/event/:eventId", (req, res, next) => {
+router.delete("/event/:eventId", auth, (req, res, next) => {
   Event.destroy({ where: { id: req.params.eventId } })
     .then(deletedEvent => res.send({ deletedEvent }))
     .catch(next);
@@ -100,7 +102,7 @@ router.get("/event/:id/tickets", async (req, res, next) => {
 
     // console.log("TOTAL TICKETS OF USER", totalTicketsOfUser);
     totalTicketsOfUser = totalTicketsOfUser.length;
-    console.log(" COMMENTS OF TICKETS", ticket.comments);
+    // console.log(" COMMENTS OF TICKETS", ticket.comments);
     const totalCommentsOfTicket = ticket.comments.length;
     const price = ticket.price;
     const createdAt = ticket.createdAt;

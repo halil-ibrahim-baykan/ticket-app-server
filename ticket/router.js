@@ -69,18 +69,27 @@ router.post("/ticket", auth, async (req, res, next) => {
 router.put("/ticket/:ticketId", auth, (req, res, next) => {
   Ticket.findByPk(req.params.ticketId)
     .then(ticket => {
-      ticket.update(req.body).then(updatedTicket => res.send(updatedTicket));
+      ticket.update(req.body).then(updatedTicket => {
+        console.log(updatedTicket);
+        return res.send(updatedTicket);
+      });
     })
     .catch(next);
 });
 
 router.delete("/ticket/:ticketId", auth, (req, res, next) => {
+  //auth,
   Ticket.destroy({ where: { id: req.params.ticketId } })
-    .then(deletedTicket => res.send({ deletedTicket }))
+    .then(deletedTicket => {
+      console.log(deletedTicket, "DELETED TICEKTTTTT");
+      return res.send({ deletedTicket });
+    })
+
     .catch(next);
 });
 
-router.get("/ticket/:id", async (req, res, next) => {
+router.get("/ticket/:id/", async (req, res, next) => {
+  // eventData.userId = jwt.decode(token).userId;
   const ticket = await Ticket.findByPk(req.params.id, {
     include: [User, Event, Comment]
   });
